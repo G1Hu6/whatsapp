@@ -1,18 +1,21 @@
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsapp_ui/colors.dart';
+import 'package:whatsapp_ui/common/utils/utils.dart';
 import 'package:whatsapp_ui/common/widgets/styled_button.dart';
+import 'package:whatsapp_ui/features/auth/controller/auth_controller.dart';
 import 'package:whatsapp_ui/features/auth/widgets/auth_text_field.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   static const routeName = "login-screen";
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final countryController = TextEditingController();
   final countryCodeController = TextEditingController();
   final phoneNumberController = TextEditingController();
@@ -21,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void showAllCountryPicker() {
     showCountryPicker(
       context: context,
-      
+
       showPhoneCode:
           true, // optional. Shows phone code before the country name.
       onSelect: (Country country) {
@@ -30,6 +33,16 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       },
     );
+  }
+
+  void sendPnoneNumber() {
+    String phoneNumber = phoneNumberController.text.trim();
+    if (pickedCountry != Country.worldWide && phoneNumber.isNotEmpty) {
+      ref.read(authControllerProvider).signInWithPnoneNumber(
+          "+${pickedCountry.phoneCode}$phoneNumber", context);
+    } else {
+      showAlertDialog(context: context, message: "Please Submit all fields");
+    }
   }
 
   @override
@@ -101,7 +114,10 @@ number. Carrier changes may apply. ''',
           ),
         ),
       ),
-      floatingActionButton: StyledButton(text: "Next", onPressed: () {}),
+      floatingActionButton: StyledButton(
+        text: "Next",
+        onPressed: sendPnoneNumber,
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

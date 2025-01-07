@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp_ui/colors.dart';
 import 'package:whatsapp_ui/widgets/contacts_list.dart';
 import 'package:whatsapp_ui/widgets/custom_text_field.dart';
 import 'package:chips_choice/chips_choice.dart';
