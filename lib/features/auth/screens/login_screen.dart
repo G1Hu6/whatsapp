@@ -104,6 +104,7 @@ number. Carrier changes may apply. ''',
                         Expanded(
                             child: AuthTextField(
                                 hintText: "Phone Number",
+                                alignCenter: true,
                                 controller: phoneNumberController))
                       ],
                     )

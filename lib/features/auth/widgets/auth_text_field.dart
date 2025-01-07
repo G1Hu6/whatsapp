@@ -6,8 +6,8 @@ class AuthTextField extends StatelessWidget {
   final Color? hintColor;
   final Icon? suffixIcon;
   final Icon? prefixIcon;
-  final bool? readOnly;
-  final bool? alignCenter;
+  final bool readOnly;
+  final bool alignCenter;
   final Function()? onTap;
   final TextEditingController controller;
   const AuthTextField(
@@ -17,9 +17,9 @@ class AuthTextField extends StatelessWidget {
       this.suffixIcon,
       this.prefixIcon,
       required this.controller,
-      this.readOnly,
+      this.readOnly = false,
       this.onTap,
-      this.alignCenter});
+      this.alignCenter = false});
 
   static const textFieldBorder =
       UnderlineInputBorder(borderSide: BorderSide(color: primaryColor));
@@ -29,7 +29,9 @@ class AuthTextField extends StatelessWidget {
     return TextField(
       onTap: onTap,
       controller: controller,
-      readOnly: readOnly ?? false,
+      textAlignVertical: TextAlignVertical.center,
+      textAlign: (alignCenter) ? TextAlign.center : TextAlign.start,
+      readOnly: readOnly,
       keyboardType: TextInputType.number,
       cursorColor: primaryColor,
       decoration: InputDecoration(
