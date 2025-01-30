@@ -6,20 +6,26 @@ class AuthTextField extends StatelessWidget {
   final Color? hintColor;
   final Icon? suffixIcon;
   final Icon? prefixIcon;
+  final int? maxLength;
   final bool readOnly;
   final bool alignCenter;
   final Function()? onTap;
-  final TextEditingController controller;
+  final Function(String value)? onChanged;
+  final Function(String value)? onSubmitted;
+  final TextEditingController? controller;
   const AuthTextField(
       {super.key,
       required this.hintText,
       this.hintColor,
       this.suffixIcon,
       this.prefixIcon,
-      required this.controller,
+      this.controller,
+      this.maxLength,
       this.readOnly = false,
       this.onTap,
-      this.alignCenter = false});
+      this.onChanged,
+      this.alignCenter = false,
+      this.onSubmitted});
 
   static const textFieldBorder =
       UnderlineInputBorder(borderSide: BorderSide(color: primaryColor));
@@ -28,7 +34,10 @@ class AuthTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       onTap: onTap,
+      maxLength: maxLength,
       controller: controller,
+      onSubmitted: onSubmitted,
+      onChanged: onChanged,
       textAlignVertical: TextAlignVertical.center,
       textAlign: (alignCenter) ? TextAlign.center : TextAlign.start,
       readOnly: readOnly,

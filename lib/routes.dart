@@ -12,7 +12,7 @@ Route<dynamic> generateRoutes(RouteSettings settings) {
     case OtpScreen.routeName:
       return MaterialPageRoute(
         
-        builder: (context) => const OtpScreen(),
+        builder: (context) =>  OtpScreen(),
       );
     default:
       return MaterialPageRoute(

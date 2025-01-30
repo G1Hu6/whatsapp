@@ -6,32 +6,15 @@ import 'package:whatsapp_ui/common/widgets/styled_button.dart';
 import 'package:whatsapp_ui/features/auth/controller/auth_controller.dart';
 import 'package:whatsapp_ui/features/auth/widgets/auth_text_field.dart';
 
-class OtpScreen extends ConsumerStatefulWidget {
+class OtpScreen extends ConsumerWidget {
   static const routeName = '/otp-screen';
 
-  const OtpScreen({super.key});
+  OtpScreen({super.key});
 
-  @override
-  ConsumerState<OtpScreen> createState() => _OtpScreenState();
-}
-
-class _OtpScreenState extends ConsumerState<OtpScreen> {
-  final otpController = TextEditingController();
   final String? phoneNumber = Supabase.instance.client.auth.currentUser!.phone;
 
-  void validatePhoneUsingOtp() {
-    if (otpController.text.length == 6 &&
-        otpController.text.trim().isNotEmpty) {
-      ref
-          .read(authControllerProvider)
-          .verifyPhoneNumberWithOtp(phoneNumber!, otpController.text, context);
-    } else {
-      showAlertDialog(context: context, message: "Please enter a valid OTP");
-    }
-  }
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
         body: SafeArea(
@@ -52,7 +35,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
               textAlign: TextAlign.center,
               text: TextSpan(
                 text:
-                    'Waiting to automatically detect an SMS sent to $phoneNumber.',
+                    'Waiting to automatically detect an SMS sent to +$phoneNumber.',
                 style: const TextStyle(fontSize: 14, color: Colors.white),
                 children: const <TextSpan>[
                   TextSpan(
@@ -65,14 +48,22 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                 padding: EdgeInsets.symmetric(
                     horizontal: size.width * 0.15, vertical: 20),
                 child: AuthTextField(
-                    alignCenter: true,
-                    hintText: "_ _ _ _ _ _",
-                    controller: otpController)),
-            StyledButton(
-                text: "Ok",
-                onPressed: () {
-                  validatePhoneUsingOtp();
-                })
+                  alignCenter: true,
+                  maxLength: 6,
+                  hintText: "_ _ _ _ _ _",
+                  onChanged: (value) {
+                    if (value.length == 6 && value.trim().isNotEmpty) {
+                      ref.read(authControllerProvider).verifyPhoneNumberWithOtp(
+                          phoneNumber!, value.trim(), context);
+                    }
+                  },
+                  onSubmitted: (value) {
+                    if (value.length < 6 || value.trim().isEmpty) {
+                      showAlertDialog(
+                          context: context, message: "Please enter valid OTP");
+                    }
+                  },
+                )),
           ],
         ),
       ),
